@@ -1,0 +1,140 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+An element to start from.
+
+Example:
+
+    <envisa-udp></envisa-udp>
+
+@demo
+-->
+<dom-module id="envisa-udp">
+
+  <style>
+    :host {
+
+    }
+  </style>
+
+  <template>
+    <content></content>
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'envisa-udp',
+
+    properties: {
+
+      socketIP: {
+        type: String,
+        value: "237.132.123.123"
+      },
+
+      socketPort: {
+        type: String,
+        value: "3007"
+      },
+
+
+      socket: {
+        type: Object,
+        value: function(){
+          return null;
+        }
+      }
+
+    },
+
+    // Element Lifecycle
+
+    ready: function() {
+      // `ready` is called after all elements have been configured, but
+      // propagates bottom-up. This element's children are ready, but parents
+      // are not.
+      //
+      // This is the point where you should make modifications to the DOM (when
+      // necessary), or kick off any processes the element wants to perform.
+
+      var _self = this;
+
+      chrome.storage.local.get('client_id', function (result) {
+        if (result && ('client_id' in result)) {
+          _self.initClient(result.client_id);
+        } else {
+          var id = 'client' + random_string(16);
+          chrome.storage.local.set({
+            'client_id': id
+          }, function () {
+            _self.initClient(id);
+          });
+        }
+      });
+
+
+    },
+
+    attached: function() {
+      // `attached` fires once the element and its parents have been inserted
+      // into a document.
+      //
+      // This is a good place to perform any work related to your element's
+      // visual state or active behavior (measuring sizes, beginning animations,
+      // loading resources, etc).
+    },
+
+    detached: function() {
+      // The analog to `attached`, `detached` fires when the element has been
+      // removed from a document.
+      //
+      // Use this to clean up anything you did in `attached`.
+    },
+
+    // Element Behavior
+
+    /**
+     * Sometimes it's just nice to say hi.
+     *
+     * @param {string} greeting A positive greeting.
+     * @return {string} The full greeting.
+     */
+    doSomething: function(something) {
+      var response = something || 'nothing';
+      return response;
+    },
+
+    initClient: function(id){
+      var socket = new MulticastSocket({
+        name: id,
+        address: this.socketIP,
+        port: this.socketPort
+      });
+      socket.onMessage = this.onMessage;
+      this.set("socket", socket);
+
+      chrome.runtime.onMessage.addListener(this.onMessage);
+    },
+
+    onMessage: function(message, sender, sendResponse){
+      var feed = document.getElementById("videoFeed");
+      //feed.onload = sendResponse;
+      feed.src = "data:image/png;base64," + message.message;
+    }
+
+  });
+
+</script>
