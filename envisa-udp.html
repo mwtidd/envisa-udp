@@ -120,7 +120,7 @@ Example:
     },
 
     initClient: function(id){
-      var socket = new MulticastSocket({
+      var socket = MulticastSocket.call(this,{
         name: id,
         address: this.socketIP,
         port: this.socketPort
