@@ -20,6 +20,14 @@ Then, go ahead and download the element's dependencies:
 Unlike most Polymer Elements this is dependent on UDP Sockets which are only exposed
 for Chrome Apps. This Element will not work in a standard browser session.
 
+## APIs
+* [Messaging](https://developer.chrome.com/apps/runtime.html)
+* [Runtime](https://developer.chrome.com/apps/app.runtime.html)
+* [Storage](https://developer.chrome.com/apps/storage.html)
+* [Sockets](https://developer.chrome.com/apps/sockets_udp)
+* [Window](https://developer.chrome.com/apps/app.window.html)
+
+
 If you wish to work on your element in isolation, we recommend that you use
 [Polyserve](https://github.com/PolymerLabs/polyserve) to keep your element's
 bower dependencies in line. You can install it via:

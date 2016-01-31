@@ -76,7 +76,7 @@ Example:
         if (result && ('client_id' in result)) {
           _self.initClient(result.client_id);
         } else {
-          var id = 'client' + random_string(16);
+          var id = 'client' + _self.randomString(16);
           chrome.storage.local.set({
             'client_id': id
           }, function () {
@@ -133,6 +133,14 @@ Example:
       var feed = document.getElementById("videoFeed");
       //feed.onload = sendResponse;
       feed.src = "data:image/png;base64," + message.message;
+    },
+
+    randomString :function(length) {
+      var str = '';
+      for (var i = 0; i < length; i++) {
+        str += (Math.random() * 16 >> 0).toString(16);
+      }
+      return str;
     }
 
   });
